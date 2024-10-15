@@ -48,7 +48,7 @@ Si deseas contribuir a este proyecto, siéntete libre de abrir un "issue" o envi
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Para más detalles, consulta el archivo LICENSE.
+Este proyecto está bajo la Licencia GNU GENERAL PUBLIC LICENSE. Para más detalles, consulta el archivo LICENSE.
 
 ### Instrucciones para usar el README
 
