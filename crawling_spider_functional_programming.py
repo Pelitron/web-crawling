@@ -22,58 +22,27 @@ class WatchSpider(scrapy.Spider):
             dict: Un diccionario que contiene la información extraída
                 de cada reloj (imagen, nombre y precio).
         """
-        
-        def extract_image(result: scrapy.Selector) -> str:
-            """Extrae la imagen del reloj.
-
-            Args:
-                result (scrapy.Selector): Bloque de producto.
-
-            Returns:
-                str: URL de la imagen del reloj (o None si no se encuentra).
-            """
-            return result.css("div.imgBox img::attr(src)").get()
-
-        def extract_name(result: scrapy.Selector) -> str:
-            """Extrae el nombre del reloj.
-
-            Args:
-                result (scrapy.Selector): Bloque de producto.
-
-            Returns:
-                str: Nombre del reloj (o None si no se encuentra).
-            """
-            return result.css("a.pro_titel::text").get()
-
-        def extract_price(result: scrapy.Selector) -> str:
-            """Extrae el precio del reloj.
-
-            Args:
-                result (scrapy.Selector): Bloque de producto.
-
-            Returns:
-                str: Precio del reloj (o None si no se encuentra).
-            """
-            return (result.css("div h3 del::text").get() or
-                    result.css("div h3 span::text").get())
-
-        def extract_item(result: scrapy.Selector) -> dict:
-            """Extrae la información completa de un reloj.
-
-            Args:
-                result (scrapy.Selector): Bloque de producto.
-
-            Returns:
-                dict: Diccionario con 'image', 'name' y 'price'.
-            """
-            return {
-                'image': extract_image(result),
-                'name': extract_name(result),
-                'price': extract_price(result)
+        yield from (
+            {
+                'image': self.extract_image(result),
+                'name': self.extract_name(result),
+                'price': self.extract_price(result)
             }
+            for result in response.css("div.catalog_productBox")
+        )
 
-        items = map(extract_item, response.css("div.catalog_productBox"))
-        yield from items
+    def extract_image(self, result: scrapy.Selector) -> str:
+        """Extrae la imagen del reloj."""
+        return result.css("div.imgBox img::attr(src)").get()
+
+    def extract_name(self, result: scrapy.Selector) -> str:
+        """Extrae el nombre del reloj."""
+        return result.css("a.pro_titel::text").get()
+
+    def extract_price(self, result: scrapy.Selector) -> str:
+        """Extrae el precio del reloj."""
+        return (result.css("div h3 del::text").get() or
+                result.css("div h3 span::text").get())
 
 # Configuración y ejecución del crawler
 process = CrawlerProcess({
